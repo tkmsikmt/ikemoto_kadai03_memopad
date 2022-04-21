@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>myMemoPad</title>
+    <script src="js/jquery-2.1.3.min.js"></script>
+    <link rel="stylesheet" href="css/sample.css" />
+  </head>
+  <body>
+    <header>
+      <h1>MemoPad　検索</h1>
+    </header>
+
+    <main>
+      <input type="text" id="key" />
+      <textarea id="memo"></textarea>
+      <ul>
+        <li id="save">Save</li>
+        <li id="clear">Clear</li>
+      </ul>
+    </main>
+    <table id="list">
+      <!-- ここに追加データが挿入される -->
+    </table>
+
+    <h2 id="btn">検索ワードを下記に入れよう！</h2>
+    <input type="text" id="tango" />
+
+    <div id="kekka"></div>
+
+    <!-- ＋＋jsをここから入力しています＋＋ -->
+
+    <script>
+      //1.Save クリックイベント
+
+      $("#save").on("click", function () {
+        // alert(2);
+        var key = $("#key").val();
+        console.log(key);
+        var memo = $("#memo").val();
+        console.log(memo);
+
+        // ローカルストレージという保存場所にデータを登録します
+
+        localStorage.setItem(key, memo);
+
+        const test1 = `
+
+          <tr>
+              <th>${key}</th>
+              <td>${memo}</td>
+              </tr>
+      `;
+
+        // 画面に表示
+        $("#list").append(test1);
+
+        // この下消さない
+      });
+
+      //2.clear クリックイベント
+
+      $("#clear").on("click", function () {
+        alert("くりあできた");
+
+        //ローカルストレージは消去
+        localStorage.clear();
+
+        //htmlを消去する
+        $("#list").empty();
+      });
+
+      // var tango = $("#tango").val();
+      // console.log(tango);
+
+      for (let i = 0; i < localStorage.length; i++) {
+        //loop0
+        var key = localStorage.key(i);
+        var value0 = localStorage.getItem(key);
+
+        const test2 = `
+
+              <tr>
+               <th>${key}</th>
+               <td>${value0}</td>
+              </tr>
+              `;
+        // 画面に表示
+        $("#list").append(test2);
+
+        console.log(
+          value0,
+          "key＝？によって導いたストレージからゲットアイテムした情報１"
+        );
+      }
+
+      $("#btn").on("click", function () {
+        // 検索元単語をvalue2に置くこととしたい
+        var tango = $("#tango").val();
+        console.log(tango);
+        // ＋＋全体をわくで囲むために、消しにいく＋＋
+        // });
+
+        let reg = new RegExp(tango + "(.*?)", "g");
+        console.log(reg);
+
+        // let word = $("#word").val();
+        // console.log(word);
+
+        // 総当たり戦をさせてvalue0を取りに行きたい
+
+        for (let i = 0; i < localStorage.length; i++) {
+          let reg = new RegExp(tango + "(.*?)", "g");
+          console.log(reg);
+
+          var key = localStorage.key(i);
+          var value0 = localStorage.getItem(key);
+
+          //value0とtangoとを比較したい
+          console.log(value0, "keyが増える分、value0が取得される1");
+
+          // let word = $("#word").val();
+          // console.log(word);
+
+          const check = value0.match(reg);
+          console.log(check, "単語");
+
+          let value0_kekka = value0.replace(reg, `<span>${tango}</span>`);
+          // console.log(t)
+          console.log(reg)
+          console.log(value0_kekka, "value0_kekka_00");
+
+          // if (tango == value0) {
+          if (check) {
+            //value0をコンソールで表示させる!
+            console.log(value0, "keyが増える分、value0が取得される2");
+            console.log("当たっている");
+
+            // $("body").append(`<h1>お探しの単語はみつかりました！</h1>`
+            // );
+
+            $("#kekka").append(
+              `<div>
+              <h1>お探しの単語はみつかりました</h1>
+      				<div class="result">${value0_kekka}</div>
+      				</div>
+      			`
+            );
+          }
+
+          // else {
+          //   $("body").append(`<h1>お探しの単語はみつかりませんでした！</h1>`);
+          // }
+        }
+
+        // ＋＋＋全体をボタンクリックで枠囲みして、反映させるために、開けに行きたい＋＋＋
+      });
+
+      // });
+
+      //＋＋これは消さない（フォア構文②を追加で作るための準備として、コメントアウトしておく！）＋＋
+      // }
+
+      //3.ページ読み込み：保存データ取得表示
+    </script>
+
+    <footer><small>ZOOMのチャットを検索します</small></footer>
+  </body>
+</html>
